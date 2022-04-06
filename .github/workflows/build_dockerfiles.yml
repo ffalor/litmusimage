@@ -27,9 +27,10 @@ jobs:
         - { IMAGE: 'debian', TAG: '9', DOCKERFILE: 'apt_systemd_dockerfile', BASE_IMAGE: 'debian', BASE_IMAGE_TAG: '9' }
         - { IMAGE: 'debian', TAG: '10', DOCKERFILE: 'apt_sysvinit-utils_dockerfile', BASE_IMAGE: 'debian', BASE_IMAGE_TAG: '10' }
         - { IMAGE: 'debian', TAG: '11', DOCKERFILE: 'apt_sysvinit-utils_dockerfile', BASE_IMAGE: 'debian', BASE_IMAGE_TAG: 'bullseye' }
+        - { IMAGE: 'amazonlinux', TAG: '2', DOCKERFILE: 'yum_systemd_dockerfile', BASE_IMAGE: 'amazonlinux', BASE_IMAGE_TAG: '2' }
     env: ${{ matrix.env }}
     steps:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
-      - run: docker build --rm --no-cache -t litmusimage/$IMAGE:$TAG . -f $DOCKERFILE --build-arg BASE_IMAGE_TAG=$BASE_IMAGE_TAG --build-arg OS_TYPE=$BASE_IMAGE
+      - run: docker build --rm --no-cache -t litmusimage/amazonlinux:2 . -f yum_systemd_dockerfile --build-arg BASE_IMAGE_TAG=2 --build-arg OS_TYPE=amazonlinux
