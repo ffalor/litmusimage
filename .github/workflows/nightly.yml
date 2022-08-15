@@ -59,7 +59,7 @@ jobs:
           docker pull $BASE_IMAGE:$BASE_IMAGE_TAG
           docker pull ghcr.io/ffalor/$IMAGE:$TAG || true
           base_id=`docker images -q $BASE_IMAGE:$BASE_IMAGE_TAG`
-          id=`docker inspect ghcr.io/ffalor/$IMAGE:$TAG --format "{{ index .Config.Labels \"base_image\"}}"`
+          id=`docker inspect ghcr.io/ffalor/$IMAGE:$TAG --format "{{ index .Config.Labels \"base_image\"}}"` || true
           if [ "$base_id" != "$id" ]; then
             docker build --rm --no-cache -t ghcr.io/ffalor/$IMAGE:$TAG . --label "base_image=${base_id}" -f $DOCKERFILE --build-arg BASE_IMAGE_TAG=$BASE_IMAGE_TAG --build-arg OS_TYPE=$BASE_IMAGE
             docker push ghcr.io/ffalor/$IMAGE:$TAG
