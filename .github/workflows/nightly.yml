@@ -183,7 +183,5 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           file: $DOCKERFILE
-          build-args:
-            - BASE_IMAGE_TAG=$BASE_IMAGE_TAG
-            - OS_TYPE=$BASE_IMAGE
+          build-args: BASE_IMAGE_TAG=$BASE_IMAGE_TAG,OS_TYPE=$BASE_IMAGE
           no-cache: true
