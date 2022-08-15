@@ -57,7 +57,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker pull $BASE_IMAGE:$BASE_IMAGE_TAG
-          docker pull ghcr.io/ffalor/$IMAGE:$TAG
+          `docker pull ghcr.io/ffalor/$IMAGE:$TAG`
           base_id=`docker images -q $BASE_IMAGE:$BASE_IMAGE_TAG`
           id=`docker inspect ghcr.io/ffalor/$IMAGE:$TAG --format "{{ index .Config.Labels \"base_image\"}}"`
           if [ "$base_id" != "$id" ]; then
