@@ -169,19 +169,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v3.4.1
-        with:
-          images: ghcr.io/${{ env.IMAGE }}
-
       - name: Build and push Docker image
-        uses: docker/build-push-action@v2.6.1
-        with:
-          context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          file: $DOCKERFILE
-          build-args: BASE_IMAGE_TAG=$BASE_IMAGE_TAG,OS_TYPE=$BASE_IMAGE
-          no-cache: true
+        run: |
+          docker pull $BASE_IMAGE:$BASE_IMAGE_TAG
+          docker pull ghcr.io/ffalor/$IMAGE:$TAG
+          base_id=`docker images -q $BASE_IMAGE:$BASE_IMAGE_TAG`
+          id=`docker inspect ghcr.io/ffalor/$IMAGE:$TAG --format "{{ index .Config.Labels \"base_image\"}}"`
+          if [ "$base_id" != "$id" ]; then
+            docker build --rm --no-cache -t ghcr.io/ffalor/$IMAGE:$TAG . --label "base_image=${base_id}" -f $DOCKERFILE --build-arg BASE_IMAGE_TAG=$BASE_IMAGE_TAG --build-arg OS_TYPE=$BASE_IMAGE
+            docker push ghcr.io/ffalor/$IMAGE:$TAG
+          fi
